@@ -1,0 +1,46 @@
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraform.tfstate.lock.info
+
+# Docker build context files
+.dockerignore
+
+# Kubernetes local config
+.kube/
+config-aws
+
+# Ansible local files
+*.retry
+
+# Logs and OS files
+*.log
+.DS_Store
+Thumbs.db
+
+# Personal keys and certs
+*.pem
+*.key
+*.crt
+
+# Editor directories
+.vscode/
+.idea/
+
+# Environment and build artifacts
+.env
+node_modules/
+__pycache__/
+*.pyc
+dist/
+build/
+
+# Backup terraform state files (explicit)
+terraform.tfstate
+terraform.tfstate.backup

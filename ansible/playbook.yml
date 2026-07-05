@@ -1,0 +1,121 @@
+---
+- name: Configure EC2 instance with K3s and deploy Apache app from ECR
+  hosts: k8s_server
+  become: true
+  vars:
+    k3s_binary: /usr/local/bin/k3s
+    kubeconfig_remote: /etc/rancher/k3s/k3s.yaml
+    ecr_registry: 380277571862.dkr.ecr.eu-west-1.amazonaws.com
+    ecr_repo: my-html-app
+    image_name: "{{ ecr_registry }}/{{ ecr_repo }}:latest"
+
+  tasks:
+    - name: Ensure required packages are installed
+      apt:
+        name:
+          - curl
+          - ca-certificates
+          - gnupg
+          - lsb-release
+        state: present
+        update_cache: yes
+
+    - name: Check whether K3s is already installed
+      stat:
+        path: "{{ k3s_binary }}"
+      register: k3s_binary_stat
+
+    - name: Install K3s with external IP SAN
+      shell: |
+        curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC='--tls-san {{ ansible_host }} --write-kubeconfig-mode 644' sh -
+      args:
+        executable: /bin/bash
+      when: not k3s_binary_stat.stat.exists
+
+    - name: Wait for K3s to become ready
+      shell: |
+        kubectl get node "$(hostname -s)" --no-headers
+      environment:
+        KUBECONFIG: "{{ kubeconfig_remote }}"
+      register: k3s_ready
+      retries: 12
+      delay: 10
+      until: k3s_ready.rc == 0
+
+    - name: Install AWS CLI
+      apt:
+        name: awscli
+        state: present
+        update_cache: yes
+
+    - name: Create ECR pull secret for Kubernetes
+      shell: |
+        if ! kubectl get secret aws-ecr-secret >/dev/null 2>&1; then
+          kubectl create secret docker-registry aws-ecr-secret \
+            --docker-server={{ ecr_registry }} \
+            --docker-username=AWS \
+            --docker-password="$(aws ecr get-login-password --region eu-west-1)" \
+            --docker-email=you@example.com
+        fi
+      args:
+        executable: /bin/bash
+      environment:
+        KUBECONFIG: "{{ kubeconfig_remote }}"
+
+    - name: Update K3s kubeconfig server address to external IP
+      replace:
+        path: "{{ kubeconfig_remote }}"
+        regexp: '^\s*server:\s*https://.*:6443'
+        replace: '    server: https://{{ ansible_host }}:6443'
+
+    - name: Ensure local kubeconfig directory exists
+      delegate_to: localhost
+      become: false
+      run_once: true
+      file:
+        path: "{{ lookup('env','HOME') }}/.kube"
+        state: directory
+        mode: '0755'
+
+    - name: Fetch updated K3s kubeconfig to local machine
+      fetch:
+        src: "{{ kubeconfig_remote }}"
+        dest: "{{ lookup('env','HOME') }}/.kube/config-aws"
+        flat: yes
+      run_once: true
+
+    - name: Ensure local kubeconfig points to current host IP
+      delegate_to: localhost
+      become: false
+      run_once: true
+      replace:
+        path: "{{ lookup('env','HOME') }}/.kube/config-aws"
+        regexp: '^\s*server:\s*https://.*:6443'
+        replace: '    server: https://{{ ansible_host }}:6443'
+
+    - name: Copy app manifest to remote host
+      copy:
+        src: ../app.yml
+        dest: /tmp/app.yml
+
+    - name: Deploy Apache app manifest to the K3s cluster
+      shell: |
+        kubectl apply -f /tmp/app.yml
+      args:
+        executable: /bin/bash
+      environment:
+        KUBECONFIG: "{{ kubeconfig_remote }}"
+
+    - name: Wait for deployment to become available
+      shell: |
+        kubectl wait --for=condition=available deployment/my-apache-app --timeout=300s
+      args:
+        executable: /bin/bash
+      environment:
+        KUBECONFIG: "{{ kubeconfig_remote }}"
+
+    - name: Verify the application endpoint from the EC2 host
+      uri:
+        url: http://127.0.0.1:30511
+        status_code: 200
+        timeout: 10

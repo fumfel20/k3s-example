@@ -1,0 +1,70 @@
+{
+    "imageDetails": [
+        {
+            "registryId": "380277571862",
+            "repositoryName": "my-html-app",
+            "imageDigest": "sha256:d7eea7bcd350b2d50d817fa597ea5f775b8f363cb32479e904abc772820581db",
+            "imageSizeInBytes": 241270103,
+            "imagePushedAt": "2026-07-02T20:04:04.080000+01:00",
+            "imageManifestMediaType": "application/vnd.oci.image.manifest.v1+json",
+            "artifactMediaType": "application/vnd.oci.image.config.v1+json",
+            "lastRecordedPullTime": "2026-07-02T20:05:49.179000+01:00",
+            "imageStatus": "ACTIVE"
+        },
+        {
+            "registryId": "380277571862",
+            "repositoryName": "my-html-app",
+            "imageDigest": "sha256:22d99b42690b430338abbde01762d944effa44c711061c8e8b9f4e92e5df7ac5",
+            "imageSizeInBytes": 241270103,
+            "imagePushedAt": "2026-07-02T20:04:04.357000+01:00",
+            "imageManifestMediaType": "application/vnd.oci.image.index.v1+json",
+            "lastRecordedPullTime": "2026-07-02T20:05:38.943000+01:00",
+            "imageStatus": "ACTIVE"
+        },
+        {
+            "registryId": "380277571862",
+            "repositoryName": "my-html-app",
+            "imageDigest": "sha256:db91a8f3337961caec40852d108bd537e8076fc3f6e6006838ff60e1e20cc9db",
+            "imageSizeInBytes": 45245060,
+            "imagePushedAt": "2026-07-02T20:08:59.365000+01:00",
+            "imageManifestMediaType": "application/vnd.oci.image.manifest.v1+json",
+            "artifactMediaType": "application/vnd.oci.image.config.v1+json",
+            "lastRecordedPullTime": "2026-07-02T20:18:57.791000+01:00",
+            "imageStatus": "ACTIVE"
+        },
+        {
+            "registryId": "380277571862",
+            "repositoryName": "my-html-app",
+            "imageDigest": "sha256:98e0654eaaef2be99a42bed68c708d23746829876d19ca4a60d5a0fbfcf8f3c7",
+            "imageSizeInBytes": 1267,
+            "imagePushedAt": "2026-07-02T20:08:59.353000+01:00",
+            "imageManifestMediaType": "application/vnd.oci.image.manifest.v1+json",
+            "artifactMediaType": "application/vnd.oci.image.config.v1+json",
+            "imageStatus": "ACTIVE"
+        },
+        {
+            "registryId": "380277571862",
+            "repositoryName": "my-html-app",
+            "imageDigest": "sha256:8dc6c16ae630efac907da6b6a112d7465cfca6303b009cdf0c6786c1d4b3f573",
+            "imageSizeInBytes": 1267,
+            "imagePushedAt": "2026-07-02T20:04:04.101000+01:00",
+            "imageManifestMediaType": "application/vnd.oci.image.manifest.v1+json",
+            "artifactMediaType": "application/vnd.oci.image.config.v1+json",
+            "lastRecordedPullTime": "2026-07-02T20:05:38.870000+01:00",
+            "imageStatus": "ACTIVE"
+        },
+        {
+            "registryId": "380277571862",
+            "repositoryName": "my-html-app",
+            "imageDigest": "sha256:a60fe0b5e6d8b4ae05f0a4992b36af3742f8af083c301772a1b7c337c71cee62",
+            "imageTags": [
+                "latest"
+            ],
+            "imageSizeInBytes": 45245060,
+            "imagePushedAt": "2026-07-02T20:08:59.605000+01:00",
+            "imageManifestMediaType": "application/vnd.oci.image.index.v1+json",
+            "lastRecordedPullTime": "2026-07-02T20:18:57.616000+01:00",
+            "imageStatus": "ACTIVE"
+        }
+    ]
+}
